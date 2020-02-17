@@ -184,5 +184,4 @@ public:
     HashMap::const_iterator end() const {
         return const_iterator(container.end());
     }    
-
 };
