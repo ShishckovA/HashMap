@@ -6,6 +6,7 @@ template <typename KeyType, typename ValueType, typename Hash = std::hash<KeyTyp
 class HashMap {
 private:
     const size_t BODY_SIZE = 7e5;
+    typedef std::list<std::pair<const KeyType, ValueType>> pair_key_value;
     std::list<std::pair<const KeyType, ValueType>> container;
     std::vector<std::list<typename std::list<std::pair<const KeyType, ValueType>>::iterator>> body;
     Hash hasher;
