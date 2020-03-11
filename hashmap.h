@@ -7,8 +7,8 @@ class HashMap {
 private:
     const size_t BODY_SIZE = 7e5;
     typedef std::list<std::pair<const KeyType, ValueType>> pair_key_value;
-    std::list<std::pair<const KeyType, ValueType>> container;
-    std::vector<std::list<typename std::list<std::pair<const KeyType, ValueType>>::iterator>> body;
+    pair_key_value container;
+    std::vector<std::list<typename pair_key_value::iterator>> body;
     Hash hasher;
 public:
     HashMap(Hash _hasher=Hash()): body(BODY_SIZE), hasher(_hasher) {
@@ -47,10 +47,10 @@ public:
 
     class iterator {
     private:
-        typename std::list<std::pair<const KeyType, ValueType>>::iterator it;
+        typename pair_key_value::iterator it;
     public:
         iterator() {}
-        iterator(const typename std::list<std::pair<const KeyType, ValueType>>::iterator parent): it(parent) {}; 
+        iterator(const typename pair_key_value::iterator parent): it(parent) {}; 
         iterator(const iterator& other): it(other.it) {}
         std::pair<const KeyType, ValueType>& operator*() {
             return *it;
@@ -76,10 +76,10 @@ public:
     };
     class const_iterator {
     private:
-        typename std::list<std::pair<const KeyType, ValueType>>::const_iterator it;
+        typename pair_key_value::const_iterator it;
     public:
         const_iterator() {}
-        const_iterator(typename std::list<std::pair<const KeyType, ValueType>>::const_iterator parent): it(parent) {}; 
+        const_iterator(typename pair_key_value::const_iterator parent): it(parent) {}; 
         const_iterator(const const_iterator& other): it(other.it) {}
         const std::pair<const KeyType, ValueType> operator*() {
             return *it;
