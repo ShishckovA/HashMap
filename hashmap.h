@@ -6,9 +6,9 @@ template <typename KeyType, typename ValueType, typename Hash = std::hash<KeyTyp
 class HashMap {
 private:
     const size_t BODY_SIZE = 7e5;
-    typedef std::pair<const KeyType, ValueType> pair_key_value;
-    std::list<pair_key_value> container;
-    std::vector<std::list<typename std::list<pair_key_value>::iterator>> body;
+    typedef std::pair<const KeyType, ValueType> PairKeyValue;
+    std::list<PairKeyValue> container;
+    std::vector<std::list<typename std::list<PairKeyValue>::iterator>> body;
     Hash hasher;
 public:
     HashMap(Hash _hasher=Hash()): body(BODY_SIZE), hasher(_hasher) {
@@ -19,13 +19,13 @@ public:
             insert(*it);
         }
     }
-    HashMap(std::initializer_list<pair_key_value> il, Hash hasher=Hash()): body (BODY_SIZE), hasher(hasher) {
+    HashMap(std::initializer_list<PairKeyValue> il, Hash hasher=Hash()): body (BODY_SIZE), hasher(hasher) {
         for (auto p : il) {
             insert(p);
         }
     }
     void clear() {
-        for (pair_key_value p : container) {
+        for (PairKeyValue p : container) {
             body[p.first % BODY_SIZE].clear();
         }
         container.clear();
@@ -34,12 +34,12 @@ public:
     HashMap& operator=(const HashMap<KeyType, ValueType, Hash>& other) {
         body.resize(BODY_SIZE);
         hasher = other.hasher;
-        std::vector<pair_key_value> tmp;
-        for (pair_key_value p: other) {
+        std::vector<PairKeyValue> tmp;
+        for (PairKeyValue p: other) {
             tmp.push_back(p);
         }
         clear();
-        for (pair_key_value p : tmp) {
+        for (PairKeyValue p : tmp) {
             insert(p);
         }
         return *this;
@@ -47,12 +47,12 @@ public:
 
     class iterator {
     private:
-        typename std::list<pair_key_value>::iterator it;
+        typename std::list<PairKeyValue>::iterator it;
     public:
         iterator() {}
-        iterator(const typename std::list<pair_key_value>::iterator parent): it(parent) {}; 
+        iterator(const typename std::list<PairKeyValue>::iterator parent): it(parent) {}; 
         iterator(const iterator& other): it(other.it) {}
-        pair_key_value& operator*() {
+        PairKeyValue& operator*() {
             return *it;
         }
         iterator& operator++() {
@@ -64,7 +64,7 @@ public:
             ++it;
             return tmp;
         }
-        pair_key_value* operator->() {
+        PairKeyValue* operator->() {
             return &(*it);
         }
         bool operator==(const iterator& other) const {
@@ -76,12 +76,12 @@ public:
     };
     class const_iterator {
     private:
-        typename std::list<pair_key_value>::const_iterator it;
+        typename std::list<PairKeyValue>::const_iterator it;
     public:
         const_iterator() {}
-        const_iterator(typename std::list<pair_key_value>::const_iterator parent): it(parent) {}; 
+        const_iterator(typename std::list<PairKeyValue>::const_iterator parent): it(parent) {}; 
         const_iterator(const const_iterator& other): it(other.it) {}
-        const pair_key_value operator*() {
+        const PairKeyValue operator*() {
             return *it;
         }
         const_iterator& operator++() {
@@ -93,7 +93,7 @@ public:
             ++it;
             return tmp;
         }
-        const pair_key_value* operator->() {
+        const PairKeyValue* operator->() {
             return &(*it);
         }
         bool operator==(const const_iterator& other) const {
@@ -104,7 +104,7 @@ public:
         }
     };
 
-    void insert(pair_key_value pr) {
+    void insert(PairKeyValue pr) {
         size_t hash = hasher(pr.first) % BODY_SIZE;
         for (auto contIterator : body[hash]) {
             if (contIterator->first == pr.first) return;
@@ -157,7 +157,7 @@ public:
             }
         }
         ValueType value = ValueType();
-        pair_key_value to_insert(key, value);
+        PairKeyValue to_insert(key, value);
         container.push_back(to_insert);
         body[hash].push_back(std::prev(container.end()));
         return container.back().second;
