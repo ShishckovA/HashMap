@@ -107,7 +107,9 @@ public:
     void insert(PairKeyValue pr) {
         size_t hash = hasher(pr.first) % BODY_SIZE;
         for (auto contIterator : body[hash]) {
-            if (contIterator->first == pr.first) return;
+            if (contIterator->first == pr.first) {
+                return;
+            }
         }
         container.push_back(pr);
         body[hash].push_back(std::prev(container.end()));
